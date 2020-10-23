@@ -1,32 +1,83 @@
-# Prerequisites
-*.d
+#include<bits/stdc++.h>
+using namespace std;
+class edge//create class for edge array
+{
+	public:
+		int source;
+		int destination;
+		int weight;
+};
+int get_index(int n,int *parent)//provide parent index
+{
+	if(parent[n]==n)
+	{
+		return n;
+	}
+	return get_index(parent[n],parent);
+}
+bool compare(edge c1,edge c2)//here, sorting perform
+{
+	return c1.weight<c2.weight;
+}
+void kruskal(edge* vec,int n,int e)
+{
+	sort(vec,vec+e,compare);
+	int *parent=new int[n];
+	for(int i=0;i<n;i++)
+	{
+		parent[i]=i;
+	}
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+	edge* out=new edge[n];//create outpur edge type array
+	int count=0,i=0,index=0;
+	while(count!=n-1&&i!=e)
+	{
+		int s_index=get_index(vec[i].source,parent);
+		int d_index=get_index(vec[i].destination,parent);
+		int w=vec[i].weight;
+		if(s_index!=d_index)
+		{
+			out[index].source=vec[i].source;
+			out[index].destination=vec[i].destination;
+			out[index].weight=vec[i].weight;
+			parent[d_index]=s_index;
+			index++;
+			count++;
+            
+		}
+		i++;
+	}
 
-# Precompiled Headers
-*.gch
-*.pch
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+	for(int i=0;i<count;i++)
+	{
+		if(out[i].source<=out[i].destination){
+		cout<<out[i].source<<" "<<out[i].destination<<" "<<out[i].weight<<endl;
+	  }
+	  else
+	  {
+	  	cout<<out[i].destination<<" "<<out[i].source<<" "<<out[i].weight<<endl;
+	  }
+	}
 
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
+	
+	
+	
+}
+int main()
+{
+	int n,e;//enter the node's and number of edge
+	cin>>n>>e;
+	edge* vec=new edge[e];//create edge type vector
+	for(int i=0;i<e;i++)
+	{
+		int s,d,w;//enter the source ,destination and weight
+		cin>>s>>d>>w;
+		vec[i].source=s;
+		vec[i].destination=d;
+		vec[i].weight=w;
+	}
+	kruskal(vec,n,e);// applying 
+	
+	return 0;
+}
